@@ -1,17 +1,38 @@
 // Menu link data
+// var menuLinks = [
+//   { text: 'about', href: '/about' },
+//   { text: 'catalog', href: '/catalog' },
+//   { text: 'orders', href: '/orders' },
+//   { text: 'account', href: '/account' },
+// ];
+
+// Update the menu link
+
 var menuLinks = [
-  { text: 'about', href: '/about' },
-  { text: 'catalog', href: '/catalog' },
-  { text: 'orders', href: '/orders' },
-  { text: 'account', href: '/account' },
+  {text: 'about', href: '/about'},
+  {text: 'catalog', href: '#', subLinks: [
+    {text: 'all', href: '/catalog/all'},
+    {text: 'top selling', href: '/catalog/top'},
+    {text: 'search', href: '/catalog/search'},
+  ]},
+  {text: 'orders', href: '#' , subLinks: [
+    {text: 'new', href: '/orders/new'},
+    {text: 'pending', href: '/orders/pending'},
+    {text: 'history', href: '/orders/history'},
+  ]},
+  {text: 'account', href: '#', subLinks: [
+    {text: 'profile', href: '/account/profile'},
+    {text: 'sign out', href: '/account/signout'},
+  ]},
 ];
 
+
 //Part 1
-//1.    Select and cache the <main> element in a variable named mainEl.
+//1.  Select and cache the <main> element in a variable named mainEl.
 const mainEl = document.getElementsByTagName('main');
 console.log(mainEl[0]);
 
-// 2.   Set the background color of mainEl to the value stored in the --main-bg CSS custom property.
+// 2.  Set the background color of mainEl to the value stored in the --main-bg CSS custom property.
 // Hint: Assign a string that uses the CSS var() function like this: 'var(--main-bg)'.
 mainEl[0].style.backgroundColor = 'var(--main-bg)';
 
@@ -36,8 +57,6 @@ topMenuEl.style.backgroundColor = `var(--top-menu-bg)`;
 // 4.    Add a class of flex-around to topMenuEl.
 topMenuEl.classList.add('flex-around');
 
-
-
 //Part 3:
 // 1.   Iterate over the entire menuLinks array and for each "link" object:
 menuLinks.forEach((link)=>{
@@ -57,14 +76,44 @@ menuLinks.forEach((link)=>{
 
 // Part 3: Creating the Submenu
 
-
-let subMenuE = document.getElementById('#sub-menu');
+let subMenuEl = document.getElementById('sub-menu');
+// Set the height of subMenuEl to "100%"
 subMenuEl.style.height = '100%';
 
+// Set the background color to the value of the --sub-menu-bg CSS custom property
+subMenuEl.style.backgroundColor = 'var(--sub-menu-bg)';
 
-subMenuEl.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--sub-menu-bg');
-
-
+// Add the class of "flex-around" to the subMenuEl element
 subMenuEl.classList.add('flex-around');
 
+subMenuEl.style.position = 'absolute';
+subMenuEl.style.top = '0';
 
+/// Part 4: Adding Menu Interaction///////////
+
+// 1. Select and cache the all of the `<a>` elements inside of `topMenuEl` in a variable named `topMenuLinks`.
+const topMenuLinks = topMenuEl.querySelectorAll('a');
+
+// Attach a delegated 'click' event listener to topMenuEl
+topMenuEl.addEventListener('click', function(event) {
+  // Prevent the default behavior of the <a> element (i.e., the navigation)
+  event.preventDefault();
+
+  // Return if the element clicked was not an <a> element
+  if (event.target.tagName !== 'A') {
+    return;
+  }
+
+  // Loop through all <a> elements in topMenuLinks and remove the 'active' class
+  topMenuLinks.forEach(function(link) {
+    link.classList.remove('active');
+  });
+
+  // Toggle the 'active' class on the clicked <a> element
+  event.target.classList.toggle('active');
+
+  
+
+  // Log the content of the clicked <a> to verify the handler is working
+  console.log(event.target.textContent);
+});
